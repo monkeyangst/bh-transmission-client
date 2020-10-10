@@ -1,6 +1,6 @@
 import React from 'react';
 import './App.css';
-import Torrents from './Torrents';
+import Torrents from '../TorrentList';
 
 function App() {
   return (

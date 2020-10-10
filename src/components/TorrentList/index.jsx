@@ -1,6 +1,6 @@
 import React from 'react';
 import {Container} from 'react-bootstrap';
-import TorrentCard from './TorrentCard';
+import TorrentCard from '../TorrentCard';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 class Torrents extends React.Component {
