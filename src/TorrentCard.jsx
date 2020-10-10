@@ -16,6 +16,7 @@ const TorrentCard = (props) => {
       variant = 'secondary';
       animated = 0;
       striped = 0;
+      label = "Paused";
       break;
     case 1: 
       variant = 'warning';
@@ -53,7 +54,7 @@ const TorrentCard = (props) => {
     striped = 0;
     animated = 1;
   }
-  if (props.torrent.error) {
+  if (props.torrent.error && props.torrent.status !== 0) {
     bgColor = "bg-danger";
   }
   if (props.torrent.recheckProgress > 0) {
@@ -67,7 +68,7 @@ const TorrentCard = (props) => {
     <Card key={props.torrent.id} style={{ width: '100%' }} className="mb-3">
       <Card.Body>
         <Card.Title>{props.torrent.name}</Card.Title>
-          <div style={{color: 'Red'}}>{props.torrent.errorString}</div>
+          <div className="small" style={{color: 'Red'}}>{props.torrent.errorString}</div>
           <Row>
             <Col className="col-10">
               <ProgressBar now={percentDone} className={bgColor} variant={variant} animated={animated} striped={striped} label={label} />
@@ -95,7 +96,13 @@ const TorrentCard = (props) => {
               <div>
                 <strong>Uploaded:</strong> {formatBytes(props.torrent.uploadedEver)}
               </div>
-            </Col>
+               <div>
+                <strong>Rate down:</strong> {formatBytes(props.torrent.rateDownload)}/s
+              </div>
+              <div>
+              <strong>Rate up:</strong> {formatBytes(props.torrent.rateUpload)}/s
+            </div>
+           </Col>
           </Row>
        </Card.Body>
     </Card>
