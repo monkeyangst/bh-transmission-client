@@ -22,7 +22,6 @@ class Torrents extends React.Component {
   
   
   handleSubmit = async (method, torrentIds) => {
-    console.log('Pinging server');
     let data = {
       "arguments": {
         "fields": ['id', 'addedDate', 'name', 'totalSize', 'error', 'errorString', 'eta', 'isFinished', 'isStalled', 'leftUntilDone', 'metadataPercentComplete', 'peersConnected', 'peersGettingFromUs', 'peersSendingToUs', 'percentDone', 'queuePosition', 'rateDownload', 'rateUpload', 'recheckProgress', 'seedRatioMode', 'seedRatioLimit', 'sizeWhenDone', 'status', 'trackers', 'downloadDir', 'uploadedEver', 'uploadRatio', 'webseedsSendingToUs', 'activityDate', 'corruptEver', 'desiredAvailable', 'downloadedEver', 'fileStats', 'haveUnchecked', 'haveValid', 'peers', 'startDate', 'trackerStats', 'comment', 'creator', 'dateCreated', 'files', 'hashString', 'isPrivate', 'pieceCount', 'pieceSize']

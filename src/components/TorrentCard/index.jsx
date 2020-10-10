@@ -1,5 +1,6 @@
 import React from 'react';
-import { Card, ProgressBar, Row, Col, Button } from 'react-bootstrap';
+import { Card, ProgressBar, Row, Col } from 'react-bootstrap';
+import StatusButton from './StatusButton';
 
 function formatBytes(a,b=2){if(0===a)return"0 Bytes";const c=0>b?0:b,d=Math.floor(Math.log(a)/Math.log(1024));return parseFloat((a/Math.pow(1024,d)).toFixed(c))+" "+["Bytes","KB","MB","GB","TB","PB","EB","ZB","YB"][d]}
 
@@ -67,42 +68,37 @@ const TorrentCard = (props) => {
   return (
     <Card key={props.torrent.id} style={{ width: '100%' }} className="mb-3">
       <Card.Body>
-        <Card.Title>{props.torrent.name}</Card.Title>
           <div className="small" style={{color: 'Red'}}>{props.torrent.errorString}</div>
           <Row>
             <Col className="col-10">
+            <Card.Title>{props.torrent.name}</Card.Title>
+
               <ProgressBar now={percentDone} className={bgColor} variant={variant} animated={animated} striped={striped} label={label} />
               <div>
                 {percentDone}% of {formatBytes(props.torrent.totalSize)} downloaded.
               </div>
             </Col>
             <Col className="col-2">
-              <Button onClick={(e) => props.pause(e, props.torrent)}>{props.torrent.status === 0 ? 'Resume' : 'Pause'}</Button>
+              <StatusButton click={(e) => props.pause(e, props.torrent)} status={props.torrent.status} />
+              <div className="small mt-2">
+                <div>
+                  <strong>Downloaded:</strong> {formatBytes(props.torrent.downloadedEver)}
+                </div>
+                <div>
+                  <strong>Uploaded:</strong> {formatBytes(props.torrent.uploadedEver)}
+                </div>
+                  <div>
+                  <strong>Rate down:</strong> {formatBytes(props.torrent.rateDownload)}/s
+                </div>
+                <div>
+                  <strong>Rate up:</strong> {formatBytes(props.torrent.rateUpload)}/s
+                </div>
+                <div>
+                  <strong>Ratio:</strong> {props.torrent.uploadRatio}
+                </div>
+              </div>
+
             </Col>
-          </Row>
-          <Row className="small">
-            <Col>
-              <div>
-                <strong>Status:</strong> {props.torrent.status}
-              </div>
-              <div>
-                <strong>Ratio:</strong> {props.torrent.uploadRatio}
-              </div>
-            </Col>
-            <Col>
-              <div>
-                <strong>Downloaded:</strong> {formatBytes(props.torrent.downloadedEver)}
-              </div>
-              <div>
-                <strong>Uploaded:</strong> {formatBytes(props.torrent.uploadedEver)}
-              </div>
-               <div>
-                <strong>Rate down:</strong> {formatBytes(props.torrent.rateDownload)}/s
-              </div>
-              <div>
-              <strong>Rate up:</strong> {formatBytes(props.torrent.rateUpload)}/s
-            </div>
-           </Col>
           </Row>
        </Card.Body>
     </Card>

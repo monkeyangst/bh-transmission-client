@@ -1,0 +1,12 @@
+.StatusButton {
+  font-size: 2em;
+  color: #777777;
+}
+
+.StatusButton:hover {
+  cursor: pointer;
+}
+
+.StatusButton:active {
+  color: #000000;
+}
