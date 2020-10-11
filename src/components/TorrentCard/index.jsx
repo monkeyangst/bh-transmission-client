@@ -74,7 +74,7 @@ const TorrentCard = (props) => {
             <Card.Title>{props.torrent.name}</Card.Title>
 
               <ProgressBar now={percentDone} className={bgColor} variant={variant} animated={animated} striped={striped} label={label} />
-              <div>
+              <div className="small">
                 {percentDone}% of {formatBytes(props.torrent.totalSize)} downloaded.
               </div>
             </Col>

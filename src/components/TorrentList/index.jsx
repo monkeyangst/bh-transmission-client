@@ -2,6 +2,9 @@ import React from 'react';
 import {Container} from 'react-bootstrap';
 import TorrentCard from '../TorrentCard';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import RPC from '../../utility/rpc';
+
+const rpc = new RPC();
 
 class Torrents extends React.Component {
   state = {
@@ -12,12 +15,20 @@ class Torrents extends React.Component {
   }
 
   componentDidMount() {
-    this.handleSubmit();
+    rpc.handleSubmit()
+      .then((response) => {
+        response.json().then((result) => {
+          if (result.arguments.torrents) this.setState({torrents: result.arguments.torrents})
+        })
+       })
     setInterval(() => {
-      this.handleSubmit();
-    }, 5000)
-    //   .then(res => this.setState({ response: res.express }))
-    //   .catch(err => console.log(err));
+      rpc.handleSubmit()
+      .then((response) => {
+        response.json().then((result) => {
+          if (result.arguments.torrents) this.setState({torrents: result.arguments.torrents})
+        })
+       })
+      }, 5000)
   }
   
   
