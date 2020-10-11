@@ -34,7 +34,8 @@ class RPC {
           headers: {...headers,'X-Transmission-Session-Id': this.sessionID},
           body: bodyText
         })
-      } else { return response }
+        .catch((err) => console.log(err))
+      } else return response 
       // else {
       //   response.json().then((result) => {
       //     if (result.arguments.torrents) this.setState({torrents: result.arguments.torrents})
