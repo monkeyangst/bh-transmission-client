@@ -1,43 +1,42 @@
-import { runInAction, observable, action } from 'mobx';
+import { runInAction, observable, makeObservable } from 'mobx';
 import RPC from '../util/rpc';
 
 const rpc = new RPC();
 
 class TorrentStore {
-  @observable torrents = [];
-  @observable loading = true;
+  torrents = [];
+  populated = false;
 
-  @action async fetchTorrents() {
-    this.torrents = [];
-    this.loading = true;
-    const res = await rpc.sendRequest('torrent-get');
-    runInAction(() => {
-      this.torrents = res.torrents;
+  constructor() {
+    makeObservable(this, {
+      torrents: observable,
+      populated: observable,
     });
   }
+
+  fetchTorrents() {
+    this.loading = true;
+    console.log('Fetching torrents...');
+    rpc
+      .sendRequest('torrent-get')
+      .then((response) => response.json())
+      .then((data) => {
+        runInAction(() => {
+          console.log(data.arguments);
+          this.torrents = data.arguments.torrents;
+          if (this.torrents.length > 0) {
+            this.populated = true;
+            console.log('I found some torrents');
+            console.log(this.populated);
+          }
+        });
+      });
+  }
+
+  changePhrase = () => {
+    console.log("I'm changing the phrase");
+    this.catchPhrase = 'Something random.';
+  };
 }
 
-// export function createTorrentStore() {
-//   return {
-//     torrents: [],
-//     fetchTorrents() {
-//       console.log('Fetching torrents...');
-//       rpc.sendRequest('torrent-get').then((response) => {
-//         console.log('RESPONSE');
-//         console.log(response);
-//       });
-//     },
-//   };
-// }
-
-// const TorrentContext = React.createContext(null);
-
-// export const StoreProvider = ({ children }) => {
-//   const store = createTorrentStore(TorrentContext);
-
-//   return (
-//     <TorrentContext.Provider value={store}>{children}</TorrentContext.Provider>
-//   );
-// };
-
-// export const useTorrentStore = () => React.useContext(TorrentContext);
+export default new TorrentStore();

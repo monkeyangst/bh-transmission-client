@@ -1,18 +1,15 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import App from './components/App';
 import * as serviceWorker from './serviceWorker';
-import { StoreProvider } from './stores/torrentStore';
-import Flooble from './test';
-import { Provider } from 'mobx-react';
+import { stores, StoreProvider } from './stores';
+import App from './components/App';
 
 ReactDOM.render(
   <React.StrictMode>
-    <Provider>
-      {/* <App /> */}
-      <Flooble />
-    </Provider>
+    <StoreProvider stores={stores}>
+      <App />
+    </StoreProvider>
   </React.StrictMode>,
   document.getElementById('root')
 );

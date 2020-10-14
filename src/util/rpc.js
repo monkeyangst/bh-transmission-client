@@ -5,9 +5,9 @@ class RPC {
     this.sessionID = 'FLOOBLE';
   }
 
-  sendRequest = (method, torrentIds) => {
+  sendRequest = (method, args) => {
     let data = {
-      arguments: {
+      arguments: args || {
         fields: [
           'id',
           'addedDate',
@@ -59,7 +59,7 @@ class RPC {
       },
       method: method ? method : 'torrent-get',
     };
-    if (torrentIds) data.arguments.ids = torrentIds;
+    // if (torrentIds) data.arguments.ids = torrentIds;
 
     let bodyText = JSON.stringify(data);
 
@@ -74,6 +74,7 @@ class RPC {
     }).then((response) => {
       if (response.status === 409) {
         // Must make second POST request, populating the 'X-Transmission-Session-Id' header with the one returned the first time.
+        console.log('GOT THE 409');
         this.sessionID = response.headers.get('X-Transmission-Session-Id');
         return fetch('/transmission/rpc', {
           method: 'POST',
@@ -81,11 +82,6 @@ class RPC {
           body: bodyText,
         }).catch((err) => console.log(err));
       } else return response;
-      // else {
-      //   response.json().then((result) => {
-      //     if (result.arguments.torrents) this.setState({torrents: result.arguments.torrents})
-      //   });
-      // }
     });
   };
 }
