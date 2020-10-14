@@ -3,10 +3,16 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './components/App';
 import * as serviceWorker from './serviceWorker';
+import { StoreProvider } from './stores/torrentStore';
+import Flooble from './test';
+import { Provider } from 'mobx-react';
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <Provider>
+      {/* <App /> */}
+      <Flooble />
+    </Provider>
   </React.StrictMode>,
   document.getElementById('root')
 );
