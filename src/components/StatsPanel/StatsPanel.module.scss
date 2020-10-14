@@ -1,0 +1,10 @@
+@import '~bootstrap/scss/bootstrap';
+
+.StatsPanel {
+  width: 200px;
+  height: 200px;
+
+  @extend .bg-primary;
+  @extend .text-white;
+  @extend .alert-warning;
+}

@@ -1,6 +1,8 @@
 import React from 'react';
 import { observer } from 'mobx-react';
 import { StoreContext } from '../../stores';
+import { Card } from 'react-bootstrap';
+import classes from './StatsPanel.module.scss';
 
 class StatsPanel extends React.Component {
   static contextType = StoreContext;
@@ -19,8 +21,7 @@ class StatsPanel extends React.Component {
     console.log(this.context);
     this.statsStore = this.context.statsStore;
     return (
-      <div className="container">
-        <button onClick={() => this.statsStore.fetchStats(15)}>Hit Me</button>
+      <Card className={classes.StatsPanel}>
         <ul>
           <li>
             <strong>Download Speed: </strong>
@@ -43,7 +44,7 @@ class StatsPanel extends React.Component {
             {this.statsStore.pausedTorrentCount}
           </li>
         </ul>
-      </div>
+      </Card>
     );
   }
 }

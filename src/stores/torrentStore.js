@@ -3,14 +3,6 @@ import RPC from '../util/rpc';
 
 const rpc = new RPC();
 
-const findTorrentById = (idKey, torrents = this.torrents) => {
-  for (var i = 0; i < torrents.length; i++) {
-    if (torrents[i].id === idKey) {
-      return torrents[i];
-    }
-  }
-};
-
 class TorrentStore {
   torrents = [];
   populated = false;
