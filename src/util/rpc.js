@@ -59,9 +59,11 @@ class RPC {
       },
       method: method ? method : 'torrent-get',
     };
-    // if (torrentIds) data.arguments.ids = torrentIds;
-
+    // console.log('RPC FILE');
+    // console.log(data);
     let bodyText = JSON.stringify(data);
+    // console.log('REQUEST BODY:');
+    // console.log(bodyText);
 
     let headers = {
       'Content-Type': 'application/json',
@@ -74,7 +76,7 @@ class RPC {
     }).then((response) => {
       if (response.status === 409) {
         // Must make second POST request, populating the 'X-Transmission-Session-Id' header with the one returned the first time.
-        console.log('GOT THE 409');
+        // console.log('GOT THE 409');
         this.sessionID = response.headers.get('X-Transmission-Session-Id');
         return fetch('/transmission/rpc', {
           method: 'POST',

@@ -12,24 +12,19 @@ class Torrents extends React.Component {
   };
 
   componentDidMount() {
-    console.log('TorrentList: --- componentDidMount()');
-    console.log(this.torrentStore);
+    // console.log('TorrentList: --- componentDidMount()');
+    // console.log(this.torrentStore);
     this.torrentStore.fetchTorrents();
+    setInterval(() => {
+      this.torrentStore.fetchTorrents();
+    }, 5000);
   }
 
-  handlePauseResume = (e, torrent) => {
-    console.log('I think this is ' + torrent.name);
-    let method = 'torrent-stop';
-    if (torrent.status === 0) method = 'torrent-start';
-    console.log(method);
-    this.sendRequest(method, [torrent.id]);
-  };
-
   render() {
-    console.log('TorrentList: --- render()');
-    console.log(this.context);
+    // console.log('TorrentList: --- render()');
+    // console.log(this.context);
     this.torrentStore = this.context.torrentStore;
-    console.log('POPULATED? ', this.torrentStore.populated);
+    // console.log('POPULATED? ', this.torrentStore.populated);
     let torrents = [];
     if (this.torrentStore.populated) {
       torrents = this.torrentStore.torrents.map((torrent) => {
@@ -39,16 +34,17 @@ class Torrents extends React.Component {
             key={torrent.id}
             torrent={torrent}
             selected={selected}
-            pause={this.handlePauseResume}
+            pause={
+              torrent.status === 0
+                ? this.torrentStore.startTorrent
+                : this.torrentStore.stopTorrent
+            }
           />
         );
       });
     }
     return (
       <Container className="p-3">
-        <button onClick={() => this.torrentStore.fetchTorrents()}>
-          HIT ME
-        </button>
         <Container className="mt-3">{torrents}</Container>
       </Container>
     );

@@ -21,7 +21,7 @@ const TorrentCard = (props) => {
               </Col>
               <Col className="col-1">
                 <StatusButton
-                  click={(e) => props.pause(e, props.torrent)}
+                  click={(e) => props.pause(e, props.torrent.id)}
                   status={props.torrent.status}
                 />
               </Col>
