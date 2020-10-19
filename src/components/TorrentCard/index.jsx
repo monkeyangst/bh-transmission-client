@@ -1,5 +1,6 @@
 import React from 'react';
-import { Card, Row, Col } from 'react-bootstrap';
+import { Row, Col } from 'react-bootstrap';
+import { Card, CardContent, CardHeader, Grid } from '@material-ui/core';
 import StatusButton from './StatusButton';
 import TorrentProgress from './TorrentProgress';
 import TorrentStats from './TorrentStats';
@@ -8,13 +9,13 @@ import { formatBytes } from '../../util/calc';
 const TorrentCard = (props) => {
   return (
     <Card key={props.torrent.id} style={{ width: '100%' }} className="mb-3">
-      <Card.Body>
+      <CardContent>
         <div className="small" style={{ color: 'Red' }}>
           {props.torrent.errorString}
         </div>
         <Row>
           <Col className="col-10">
-            <Card.Title>{props.torrent.name}</Card.Title>
+            <div>{props.torrent.name}</div>
             <Row>
               <Col className="col-11">
                 <TorrentProgress torrent={props.torrent} />
@@ -32,11 +33,8 @@ const TorrentCard = (props) => {
               {formatBytes(props.torrent.totalSize)} downloaded.
             </div>
           </Col>
-          <Col className="col-2">
-            <TorrentStats torrent={props.torrent} />
-          </Col>
         </Row>
-      </Card.Body>
+      </CardContent>
     </Card>
   );
 };
