@@ -34,33 +34,45 @@ class TorrentStore {
       });
   }
 
-  stopTorrent(e = '', ids) {
+  stopOrStart = (doWhich = 'torrent-start', selectedIds) => {
     let idKeys = [];
-    if (!Array.isArray(ids)) idKeys.push(ids);
-    else idKeys = ids;
+    // If we've only got one torrent, not an array, that's fine
+    if (Array.isArray(selectedIds)) idKeys = selectedIds;
+    else idKeys.push(selectedIds);
+    // by this time, idKeys should be an array of ids
     let args = { ids: [...idKeys] };
     rpc
-      .sendRequest('torrent-stop', args)
+      .sendRequest(doWhich, args)
       .then((response) => response.json())
       .then((data) => {
-        // console.log(data);
-        // console.log('Sould have stopped.');
+        // Set the status of each of our selected torrents to 0: stopped
+        if (data.result === 'success') {
+          console.log('SENDING STOP REQUEST SUCCESSFUL');
+          runInAction(() => {
+            for (var torrent of this.torrents) {
+              if (idKeys.includes(torrent.id)) {
+                console.log(torrent.name + ' is what you clicked.');
+                if (doWhich === 'torrent-stop') {
+                  torrent.status = 0;
+                  torrent.name = 'Pausing...';
+                } else {
+                  torrent.status = 4;
+                  torrent.name = 'Starting...';
+                }
+              }
+            }
+          });
+        }
       });
-  }
+  };
 
-  startTorrent(e = '', ids) {
-    let idKeys = [];
-    if (!Array.isArray(ids)) idKeys.push(ids);
-    else idKeys = ids;
-    let args = { ids: [...idKeys] };
-    rpc
-      .sendRequest('torrent-start', args)
-      .then((response) => response.json())
-      .then((data) => {
-        console.log(data);
-        console.log('Sould have started.');
-      });
-  }
+  stopTorrent = (e = '', ids) => {
+    this.stopOrStart('torrent-stop', ids);
+  };
+
+  startTorrent = (e = '', ids) => {
+    this.stopOrStart('torrent-start', ids);
+  };
 
   changePhrase = () => {
     console.log("I'm changing the phrase");
