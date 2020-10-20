@@ -1,8 +1,7 @@
 import React from 'react';
 import './App.css';
 import Torrents from '../TorrentTable';
-import Header from '../Header';
-import 'bootstrap/dist/css/bootstrap.min.css';
+import Header from '../Header/';
 
 function App() {
   return (

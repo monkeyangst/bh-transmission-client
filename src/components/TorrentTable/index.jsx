@@ -1,14 +1,19 @@
 import React from 'react';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableContainer from '@material-ui/core/TableContainer';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Typography,
+} from '@material-ui/core';
 import { StoreContext } from '../../stores';
 import { observer } from 'mobx-react';
-import TorrentProgress from '../TorrentCard/TorrentProgress';
+import TorrentProgress from '../TorrentProgress';
 import { formatBytes } from '../../util/calc';
+import { ArrowUpward, ArrowDownward } from '@material-ui/icons';
+import StatusButton from '../StatusButton';
 
 class TorrentTable extends React.Component {
   static contextType = StoreContext;
@@ -26,6 +31,14 @@ class TorrentTable extends React.Component {
     }, 5000);
   }
 
+  startStopClicked(e, id, status) {
+    if (status === 0) {
+      this.torrentStore.startTorrent(e, id);
+    } else {
+      this.torrentStore.stopTorrent(e, id);
+    }
+  }
+
   render() {
     this.torrentStore = this.context.torrentStore;
     // console.log('POPULATED? ', this.torrentStore.populated);
@@ -35,15 +48,41 @@ class TorrentTable extends React.Component {
         // let selected = torrent.id === this.state.selected ? 1 : 0;
         return (
           <TableRow key={torrent.id}>
-            <TableCell>{torrent.queuePosition}</TableCell>
-            <TableCell>{torrent.name}</TableCell>
-            <TableCell>{formatBytes(torrent.sizeWhenDone)}</TableCell>
             <TableCell>
+              <StatusButton
+                click={(e) =>
+                  this.startStopClicked(e, torrent.id, torrent.status)
+                }
+                status={torrent.status}
+              />
+              {torrent.status}
+            </TableCell>
+            <TableCell style={{ overflow: 'hidden' }}>{torrent.name}</TableCell>
+            <TableCell align="center">
+              <Typography variant="body2">
+                {formatBytes(torrent.sizeWhenDone)}
+              </Typography>
+            </TableCell>
+            <TableCell align="center" style={{ width: '60%' }}>
               <TorrentProgress torrent={torrent} />
             </TableCell>
-            <TableCell>{torrent.peersConnected}</TableCell>
-            <TableCell>{formatBytes(torrent.rateDownload)}/s</TableCell>
-            <TableCell>{formatBytes(torrent.rateUpload)}/s</TableCell>
+            <TableCell align="center">{torrent.peersConnected}</TableCell>
+            <TableCell align="center">
+              <Typography
+                variant="body2"
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}
+              >
+                <ArrowDownward fontSize="small" />
+                <p>{formatBytes(torrent.rateDownload)}/s</p>
+                &nbsp;&nbsp;&nbsp;&nbsp;
+                <ArrowUpward fontSize="small" />
+                <p>{formatBytes(torrent.rateUpload)}/s</p>
+              </Typography>
+            </TableCell>
           </TableRow>
         );
       });
@@ -51,16 +90,24 @@ class TorrentTable extends React.Component {
 
     return (
       <TableContainer>
-        <Table>
+        <Table style={{ tableLayout: 'fixed', fontSize: '.8em' }}>
+          <colgroup>
+            <col width="5%" />
+            <col width="37%" />
+            <col width="8%" />
+            <col width="21%" />
+            <col width="5%" />
+            <col width="24%" />
+          </colgroup>
+
           <TableHead>
             <TableRow>
-              <TableCell>#</TableCell>
-              <TableCell>Name</TableCell>
-              <TableCell>Size</TableCell>
-              <TableCell>Progress</TableCell>
-              <TableCell>Peers</TableCell>
-              <TableCell>Down Speed</TableCell>
-              <TableCell>Up Speed</TableCell>
+              <TableCell></TableCell>
+              <TableCell align="center">Name</TableCell>
+              <TableCell align="center">Size</TableCell>
+              <TableCell align="center">Progress</TableCell>
+              <TableCell align="center">Peers</TableCell>
+              <TableCell align="center">Speed</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>{torrents}</TableBody>

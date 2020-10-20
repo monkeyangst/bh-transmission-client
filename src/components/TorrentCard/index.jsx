@@ -1,9 +1,9 @@
 import React from 'react';
 import { Row, Col } from 'react-bootstrap';
 import { Card, CardContent, CardHeader, Grid } from '@material-ui/core';
-import StatusButton from './StatusButton';
-import TorrentProgress from './TorrentProgress';
-import TorrentStats from './TorrentStats';
+import StatusButton from '../StatusButton';
+import TorrentProgress from '..TorrentProgress';
+import TorrentStats from '../TorrentStats';
 import { formatBytes } from '../../util/calc';
 
 const TorrentCard = (props) => {
