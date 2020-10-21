@@ -1,7 +1,6 @@
 import { LinearProgress, Box, withStyles, Typography } from '@material-ui/core';
 import React from 'react';
 import { green, blue, grey } from '@material-ui/core/colors';
-// import classes from './TorrentProgress.module.css';
 
 const styles = {
   root: {
@@ -37,13 +36,6 @@ const styles = {
   },
 };
 
-function getProgressStyles(torrent) {
-  switch (torrent.status) {
-    case 6:
-      break;
-  }
-}
-
 const TorrentProgress = (props) => {
   let { torrent, classes } = props;
   let percentDone = torrent.percentDone * 100;
@@ -51,7 +43,6 @@ const TorrentProgress = (props) => {
   let barColorPrimary = classes.barColorPrimary;
 
   if (torrent.status === 6) {
-    console.log('It is a 6');
     colorPrimary = classes.colorSeeding;
     barColorPrimary = classes.barColorSeeding;
     if (torrent.uploadRatio < 1) percentDone = torrent.uploadRatio * 100;

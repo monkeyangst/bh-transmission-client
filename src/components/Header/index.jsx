@@ -1,7 +1,7 @@
 import React from 'react';
 import { AppBar, Toolbar, IconButton, Typography } from '@material-ui/core';
-import { Menu as MenuIcon } from '@material-ui/icons';
-import { makeStyles } from '@material-ui/core/styles';
+import { Menu as MenuIcon, InfoOutlined } from '@material-ui/icons';
+import { makeStyles, useTheme } from '@material-ui/core/styles';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -13,13 +13,18 @@ const useStyles = makeStyles((theme) => ({
   title: {
     flexGrow: 1,
   },
+  appBar: {
+    zIndex: 1400,
+  },
 }));
 
 const Header = (props) => {
   const classes = useStyles();
+  const theme = useTheme();
+
   return (
     <div className={classes.root}>
-      <AppBar position="static">
+      <AppBar position="static" className={classes.appBar}>
         <Toolbar>
           <IconButton
             className={classes.menuButton}
@@ -32,6 +37,9 @@ const Header = (props) => {
           <Typography variant="h6" className={classes.title}>
             Brad's Transmision Client
           </Typography>
+          <IconButton edge="end" color="inherit" aria-label="more-info">
+            <InfoOutlined />
+          </IconButton>
         </Toolbar>
       </AppBar>
     </div>

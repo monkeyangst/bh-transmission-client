@@ -1,6 +1,6 @@
 import React from 'react';
 import './App.css';
-import Torrents from '../TorrentTable';
+import Torrents from '../Torrents';
 import Header from '../Header/';
 
 function App() {

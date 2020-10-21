@@ -6,14 +6,10 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-  Typography,
 } from '@material-ui/core';
 import { StoreContext } from '../../stores';
 import { observer } from 'mobx-react';
-import TorrentProgress from '../TorrentProgress';
-import { formatBytes } from '../../util/calc';
-import { ArrowUpward, ArrowDownward } from '@material-ui/icons';
-import StatusButton from '../StatusButton';
+import TorrentRow from '../TorrentRow';
 
 class TorrentTable extends React.Component {
   static contextType = StoreContext;
@@ -39,51 +35,31 @@ class TorrentTable extends React.Component {
     }
   }
 
+  isSelected(id) {
+    // console.log('isSelected()');
+    // console.log(this.torrentStore.selectedTorrents);
+    if (this.torrentStore.selectedTorrents.length === 0) return false;
+    if (this.torrentStore.selectedTorrents.indexOf(id) !== -1) return true;
+    return false;
+  }
+
   render() {
     this.torrentStore = this.context.torrentStore;
     // console.log('POPULATED? ', this.torrentStore.populated);
     let torrents = [];
     if (this.torrentStore.populated) {
       torrents = this.torrentStore.torrents.map((torrent) => {
-        // let selected = torrent.id === this.state.selected ? 1 : 0;
+        const selected = this.isSelected(torrent.id);
         return (
-          <TableRow key={torrent.id}>
-            <TableCell>
-              <StatusButton
-                click={(e) =>
-                  this.startStopClicked(e, torrent.id, torrent.status)
-                }
-                status={torrent.status}
-              />
-              {torrent.status}
-            </TableCell>
-            <TableCell style={{ overflow: 'hidden' }}>{torrent.name}</TableCell>
-            <TableCell align="center">
-              <Typography variant="body2">
-                {formatBytes(torrent.sizeWhenDone)}
-              </Typography>
-            </TableCell>
-            <TableCell align="center" style={{ width: '60%' }}>
-              <TorrentProgress torrent={torrent} />
-            </TableCell>
-            <TableCell align="center">{torrent.peersConnected}</TableCell>
-            <TableCell align="center">
-              <Typography
-                variant="body2"
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                }}
-              >
-                <ArrowDownward fontSize="small" />
-                <p>{formatBytes(torrent.rateDownload)}/s</p>
-                &nbsp;&nbsp;&nbsp;&nbsp;
-                <ArrowUpward fontSize="small" />
-                <p>{formatBytes(torrent.rateUpload)}/s</p>
-              </Typography>
-            </TableCell>
-          </TableRow>
+          <TorrentRow
+            key={torrent.id}
+            torrent={torrent}
+            clicked={(e) => this.torrentStore.toggleSelected(torrent.id)}
+            pauseButton={(e) =>
+              this.startStopClicked(e, torrent.id, torrent.status)
+            }
+            isSelected={selected}
+          />
         );
       });
     }
