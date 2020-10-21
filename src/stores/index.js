@@ -1,10 +1,11 @@
 import React from 'react';
 import torrentStore from './torrentStore';
 import statsStore from './statsStore';
+import viewStore from './viewStore';
 
 export const StoreContext = React.createContext();
 
-export const stores = { torrentStore, statsStore };
+export const stores = { torrentStore, statsStore, viewStore };
 
 export const StoreProvider = ({ children, stores }) => {
   return (

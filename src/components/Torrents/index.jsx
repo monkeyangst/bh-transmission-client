@@ -1,4 +1,7 @@
-import React from 'react';
+import React, { useContext } from 'react';
+import { StoreContext } from '../../stores';
+import { observer } from 'mobx-react';
+
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 import {
   Container,
@@ -77,15 +80,12 @@ const useStyles = makeStyles((theme) => ({
 const Torrents = (props) => {
   const theme = useTheme();
   const classes = useStyles();
+  const context = useContext(StoreContext);
+  const open = context.viewStore.drawerOpen;
 
-  const [open, setOpen] = React.useState(false);
-
-  const handleDrawerOpen = () => {
-    setOpen(true);
-  };
-
-  const handleDrawerClose = () => {
-    setOpen(false);
+  const handleDrawerToggle = () => {
+    console.log('Should be toggling');
+    context.viewStore.toggleDrawer();
   };
 
   return (
@@ -95,7 +95,7 @@ const Torrents = (props) => {
           [classes.contentShift]: open,
         })}
       >
-        <button onClick={handleDrawerOpen}>Click Me</button>
+        <button onClick={handleDrawerToggle}>Click Me</button>
 
         <TorrentTable />
       </main>
@@ -109,7 +109,7 @@ const Torrents = (props) => {
         }}
       >
         <div className={classes.drawerHeader}>
-          <IconButton onClick={handleDrawerClose}>
+          <IconButton onClick={handleDrawerToggle}>
             {theme.direction === 'rtl' ? (
               <ChevronLeftIcon />
             ) : (
@@ -122,4 +122,4 @@ const Torrents = (props) => {
     </div>
   );
 };
-export default Torrents;
+export default observer(Torrents);
