@@ -79,6 +79,11 @@ class TorrentStore {
     console.log("I'm changing the phrase");
     this.catchPhrase = 'Something random.';
   };
+
+  getTorrent = (id) =>
+    this.torrents.find((torrent, index) => {
+      if (torrent.id === id) return true;
+    });
 }
 
 export default new TorrentStore();
