@@ -1,4 +1,4 @@
-import { runInAction, observable, makeObservable, action } from 'mobx';
+import { observable, makeObservable, action } from 'mobx';
 
 class ViewStore {
   drawerOpen = false;

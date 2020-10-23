@@ -1,5 +1,5 @@
 import React from 'react';
-import { Typography, TableRow, TableCell } from '@material-ui/core';
+import { Typography, TableRow, TableCell, Tooltip } from '@material-ui/core';
 import TorrentProgress from '../TorrentProgress';
 import { formatBytes } from '../../util/calc';
 import { observer } from 'mobx-react';
@@ -19,7 +19,9 @@ const TorrentRow = (props) => {
         <StatusButton click={pauseButton} status={torrent.status} />
       </TableCell>
       <TableCell style={{ overflow: 'hidden' }}>
-        <Typography>{torrent.name}</Typography>
+        <Tooltip title={torrent.name} enterDelay={1500} enterNextDelay={1000}>
+          <Typography noWrap>{torrent.name}</Typography>
+        </Tooltip>
         <TorrentLabels torrent={torrent} />
       </TableCell>
       <TableCell align="center">

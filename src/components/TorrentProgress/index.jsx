@@ -4,7 +4,6 @@ import {
   makeStyles,
   withStyles,
   withTheme,
-  Typography,
   Grid,
 } from '@material-ui/core';
 import { ArrowUpward, ArrowDownward } from '@material-ui/icons';
