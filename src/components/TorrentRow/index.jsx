@@ -1,16 +1,13 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { Typography, TableRow, TableCell } from '@material-ui/core';
 import TorrentProgress from '../TorrentProgress';
-import { ArrowUpward, ArrowDownward } from '@material-ui/icons';
 import { formatBytes } from '../../util/calc';
 import { observer } from 'mobx-react';
 import StatusButton from '../StatusButton';
-import { StoreContext } from '../../stores';
 import TorrentLabels from '../TorrentLabels';
 
 const TorrentRow = (props) => {
   const { torrent, clicked, isSelected, pauseButton } = props;
-  const { viewStore, torrentStore } = useContext(StoreContext);
   return (
     <TableRow
       key={torrent.id}
@@ -23,7 +20,7 @@ const TorrentRow = (props) => {
       </TableCell>
       <TableCell style={{ overflow: 'hidden' }}>
         <Typography>{torrent.name}</Typography>
-        <TorrentLabels labels={torrent.labels} />
+        <TorrentLabels torrent={torrent} />
       </TableCell>
       <TableCell align="center">
         <Typography variant="body2">

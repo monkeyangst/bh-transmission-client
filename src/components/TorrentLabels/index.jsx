@@ -13,9 +13,9 @@ const useStyles = makeStyles((theme) => ({
 
 const TorrentLabels = (props) => {
   const classes = useStyles();
-  const { labels } = props;
-  if (labels.length === 0) return null;
-  const labelElements = labels.map((label, index) => (
+  const { torrent } = props;
+  if (torrent.labels.length === 0) return null;
+  const labelElements = torrent.labels.map((label, index) => (
     <Chip
       key={index}
       className={classes.root}

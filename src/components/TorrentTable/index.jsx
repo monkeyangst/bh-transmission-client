@@ -7,11 +7,10 @@ import {
   TableHead,
   TableRow,
 } from '@material-ui/core';
-import { withTheme, withStyles } from '@material-ui/core/styles';
+import { withStyles } from '@material-ui/core/styles';
 import { StoreContext } from '../../stores';
 import { observer } from 'mobx-react';
 import TorrentRow from '../TorrentRow';
-import ContextMenu from '../ContextMenu';
 
 const styles = (theme) => ({
   root: {
