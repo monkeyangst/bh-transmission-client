@@ -4,17 +4,31 @@ import { Menu as MenuIcon, InfoOutlined } from '@material-ui/icons';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 import { StoreContext } from '../../stores';
 import { observer } from 'mobx-react';
+import clsx from 'clsx';
 
+const drawerWidth = 240;
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
   },
-  menuButton: {
-    marginRight: theme.spacing(2),
-  },
   title: {
     flexGrow: 1,
   },
+  appBar: {
+    transition: theme.transitions.create(['margin', 'width'], {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.leavingScreen,
+    }),
+  },
+  appBarShift: {
+    width: `calc(100% - ${drawerWidth}px)`,
+    transition: theme.transitions.create(['margin', 'width'], {
+      easing: theme.transitions.easing.easeOut,
+      duration: theme.transitions.duration.enteringScreen,
+    }),
+    marginRight: drawerWidth,
+  },
+  hide: { display: 'none' },
 }));
 
 const Header = (props) => {
@@ -24,16 +38,19 @@ const Header = (props) => {
   const { viewStore } = useContext(StoreContext);
 
   return (
-    <AppBar position="sticky" className={classes.root}>
+    <AppBar
+      position="sticky"
+      className={clsx(classes.appBar, {
+        [classes.appBarShift]: viewStore.drawerOpen,
+      })}
+    >
       <Toolbar>
         <IconButton
           className={classes.menuButton}
           edge="start"
           color="inherit"
           aria-label="menu"
-        >
-          <MenuIcon />
-        </IconButton>
+        ></IconButton>
         <Typography variant="h6" className={classes.title}>
           Brad's Transmision Client
         </Typography>
@@ -45,8 +62,9 @@ const Header = (props) => {
           color="inherit"
           aria-label="more-info"
           onClick={(e) => viewStore.toggleDrawer()}
+          className={clsx(viewStore.drawerOpen && classes.hide)}
         >
-          <InfoOutlined />
+          <MenuIcon />
         </IconButton>
       </Toolbar>
     </AppBar>

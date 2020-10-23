@@ -14,7 +14,7 @@ import TorrentRow from '../TorrentRow';
 
 const styles = (theme) => ({
   root: {
-    padding: theme.spacing(3),
+    padding: theme.spacing(),
     boxSizing: 'border-box',
   },
 });

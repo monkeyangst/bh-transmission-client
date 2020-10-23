@@ -1,6 +1,6 @@
 import React from 'react';
 import './App.css';
-import Torrents from '../Torrents';
+import Torrents from '../Torrents/';
 import Header from '../Header';
 import { ThemeProvider } from '@material-ui/core/styles';
 import theme from '../../theme';
