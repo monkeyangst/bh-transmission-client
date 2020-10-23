@@ -26,7 +26,7 @@ class StatsStore {
       .then((result) => result.json())
       .then((data) => {
         runInAction(() => {
-          console.log(data.arguments);
+          // console.log(data.arguments);
           this.uploadSpeed = data.arguments.uploadSpeed;
           this.downloadSpeed = data.arguments.downloadSpeed;
           this.torrentCount = data.arguments.torrentCount;

@@ -1,80 +1,139 @@
-import { LinearProgress, Box, withStyles, Typography } from '@material-ui/core';
+import {
+  LinearProgress,
+  Box,
+  makeStyles,
+  withStyles,
+  withTheme,
+  Typography,
+  Grid,
+} from '@material-ui/core';
+import { ArrowUpward, ArrowDownward } from '@material-ui/icons';
+import { formatBytes } from '../../util/calc';
 import React from 'react';
-import { green, blue, grey } from '@material-ui/core/colors';
 
-const styles = {
+const useStyles = makeStyles((theme) => ({
   root: {
-    height: 8,
-    borderRadius: 4,
+    // backgroundColor: 'Red',
   },
-  percentage: {
-    fontSize: '.75em',
+  error: {
+    color: theme.palette.error.main,
   },
-  colorPrimary: {
-    background: '#cccccc',
+  ratio: {
+    marginLeft: '10px',
   },
-  barColorPrimary: {
-    background: 'Red',
+  stats: {
+    marginTop: theme.spacing(),
+    fontSize: '.5rem',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
-  colorDownloading: {
-    background: '#b0bec5',
+  arrow: {
+    fontSize: '.7rem',
   },
-  barColorDownloading: {
-    background: blue[800],
+  speeds: {
+    justifyContent: 'center',
   },
-  colorSeeding: {
-    background: green[200],
-  },
-  barColorSeeding: {
-    background: green[800],
-  },
-  colorStopped: {
-    background: grey[200],
-  },
-  barColorStopped: {
-    background: grey[500],
-  },
+}));
+
+const getProgressStyle = (torrent, theme) => {
+  let progressFg = theme.palette.primary.dark;
+  let progressBg = theme.palette.primary.light;
+
+  switch (torrent.status) {
+    case 7:
+      progressFg = theme.palette.error.dark;
+      progressBg = theme.palette.error.light;
+      break;
+    case 6:
+    case 5:
+      progressFg = theme.palette.success.dark;
+      progressBg = theme.palette.success.light;
+      break;
+    case 4:
+    case 3:
+    default:
+      progressFg = theme.palette.info.dark;
+      progressBg = theme.palette.info.light;
+
+      break;
+    case 2:
+    case 1:
+      progressFg = theme.palette.error.dark;
+      progressBg = theme.palette.error.light;
+      break;
+    case 0:
+      progressFg = '#cccccc';
+      progressBg = '#e0e0e0';
+      break;
+  }
+  if (torrent.isFinished) {
+    progressFg = '#424242';
+    progressBg = '#bdbdbd';
+  }
+  return {
+    root: {
+      backgroundColor: progressBg,
+      height: 6,
+      borderRadius: 20,
+    },
+    bar: {
+      backgroundColor: progressFg,
+      borderRadius: 20,
+    },
+  };
+};
+
+const TorrentStats = (props) => {
+  let { torrent, classes, done } = props;
+  return (
+    <Grid container className={classes.stats} justify="space-evenly">
+      <Grid item md={2}>
+        <div>
+          <strong>Ratio:</strong>&nbsp;
+          {Number.parseFloat(torrent.uploadRatio).toFixed(2)}
+        </div>
+      </Grid>
+      <Grid item container md={8} className={classes.speeds}>
+        <Grid item>
+          <ArrowDownward className={classes.arrow} />
+        </Grid>
+        <Grid item>
+          <div>{formatBytes(torrent.rateDownload)}/s</div>
+        </Grid>
+        <Grid item>
+          <ArrowUpward className={classes.arrow} />
+        </Grid>
+        <Grid item>
+          <div>{formatBytes(torrent.rateUpload)}/s</div>
+        </Grid>
+      </Grid>
+      <Grid item md={2}>
+        <div>{`${Math.round(done)}%`}</div>
+      </Grid>
+    </Grid>
+  );
 };
 
 const TorrentProgress = (props) => {
-  let { torrent, classes } = props;
-  let percentDone = torrent.percentDone * 100;
-  let colorPrimary = classes.colorPrimary;
-  let barColorPrimary = classes.barColorPrimary;
+  let { torrent, theme } = props;
 
-  if (torrent.status === 6) {
-    colorPrimary = classes.colorSeeding;
-    barColorPrimary = classes.barColorSeeding;
-    if (torrent.uploadRatio < 1) percentDone = torrent.uploadRatio * 100;
-  }
-  if (torrent.status === 4) {
-    colorPrimary = classes.colorDownloading;
-    barColorPrimary = classes.barColorDownloading;
-  }
-  if (torrent.status === 2) {
-    percentDone = torrent.recheckProgress;
-  }
-  if (torrent.status === 0) {
-    colorPrimary = classes.colorStopped;
-    barColorPrimary = classes.barColorStopped;
-  }
+  const TestProgress = withStyles(getProgressStyle(torrent, theme))(
+    LinearProgress
+  );
+
+  let percentDone = torrent.percentDone * 100;
+  if (torrent.status === 6 && torrent.uploadRatio < 1)
+    percentDone = torrent.uploadRatio * 100;
+  else if (torrent.status === 2) percentDone = torrent.recheckProgress * 100;
+  const classes = useStyles(theme);
 
   return (
     <Box display="flex" alignItems="center">
       <Box width="100%" mr={1}>
-        <LinearProgress
-          color="primary"
-          classes={{ root: classes.root, colorPrimary, barColorPrimary }}
-          variant="determinate"
-          value={percentDone}
-        />
-      </Box>
-      <Box minWidth="2em">
-        <Typography className={classes.percentage} color="textSecondary">
-          {`${Math.round(percentDone)}%`}
-        </Typography>
+        <TestProgress variant="determinate" value={percentDone} />
+        <TorrentStats classes={classes} torrent={torrent} done={percentDone} />
       </Box>
     </Box>
   );
 };
-export default withStyles(styles)(TorrentProgress);
+export default withTheme(TorrentProgress);

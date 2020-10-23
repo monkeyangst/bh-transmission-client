@@ -15,10 +15,10 @@ class Torrents extends React.Component {
     // console.log('TorrentList: --- componentDidMount()');
     // console.log(this.torrentStore);
     this.torrentStore.fetchTorrents();
-    setInterval(() => {
-      console.log('---');
-      this.torrentStore.fetchTorrents();
-    }, 5000);
+    // setInterval(() => {
+    //   console.log('---');
+    //   this.torrentStore.fetchTorrents();
+    // }, 5000);
   }
 
   render() {

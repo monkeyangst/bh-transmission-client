@@ -7,22 +7,34 @@ import {
   TableHead,
   TableRow,
 } from '@material-ui/core';
+import { withTheme, withStyles } from '@material-ui/core/styles';
 import { StoreContext } from '../../stores';
 import { observer } from 'mobx-react';
 import TorrentRow from '../TorrentRow';
+import ContextMenu from '../ContextMenu';
+
+const styles = (theme) => ({
+  root: {
+    padding: theme.spacing(3),
+    boxSizing: 'border-box',
+  },
+});
 
 class TorrentTable extends React.Component {
   static contextType = StoreContext;
   state = {
     loading: true,
+    // contextAnchor: {
+    //   torrent: null,
+    //   anchorEl: null,
+    //   posX: null,
+    //   posY
+    // }
   };
 
   componentDidMount() {
-    // console.log('TorrentList: --- componentDidMount()');
-    // console.log(this.torrentStore);
     this.torrentStore.fetchTorrents();
     setInterval(() => {
-      console.log('---');
       this.torrentStore.fetchTorrents();
     }, 5000);
   }
@@ -38,14 +50,15 @@ class TorrentTable extends React.Component {
   isSelected(id) {
     // console.log('isSelected()');
     // console.log(this.torrentStore.selectedTorrents);
-    if (this.torrentStore.selectedTorrents.length === 0) return false;
-    if (this.torrentStore.selectedTorrents.indexOf(id) !== -1) return true;
+    if (this.viewStore.selectedTorrents.length === 0) return false;
+    if (this.viewStore.selectedTorrents.indexOf(id) !== -1) return true;
     return false;
   }
 
   render() {
+    // console.log(this.props);
     this.torrentStore = this.context.torrentStore;
-    // console.log('POPULATED? ', this.torrentStore.populated);
+    this.viewStore = this.context.viewStore;
     let torrents = [];
     if (this.torrentStore.populated) {
       torrents = this.torrentStore.torrents.map((torrent) => {
@@ -54,7 +67,7 @@ class TorrentTable extends React.Component {
           <TorrentRow
             key={torrent.id}
             torrent={torrent}
-            clicked={(e) => this.torrentStore.toggleSelected(torrent.id)}
+            clicked={(e) => this.viewStore.toggleSelected(torrent.id)}
             pauseButton={(e) =>
               this.startStopClicked(e, torrent.id, torrent.status)
             }
@@ -64,16 +77,23 @@ class TorrentTable extends React.Component {
       });
     }
 
+    var contextAnchor = this.viewStore.contextAnchor;
+    if (contextAnchor === null)
+      contextAnchor = {
+        torrent: null,
+        posX: 0,
+        posY: 0,
+        anchorEl: null,
+      };
+
     return (
-      <TableContainer>
+      <TableContainer className={this.props.classes.root}>
         <Table style={{ tableLayout: 'fixed', fontSize: '.8em' }}>
           <colgroup>
             <col width="5%" />
-            <col width="37%" />
+            <col width="42%" />
             <col width="8%" />
-            <col width="21%" />
-            <col width="5%" />
-            <col width="24%" />
+            <col width="45%" />
           </colgroup>
 
           <TableHead>
@@ -82,15 +102,21 @@ class TorrentTable extends React.Component {
               <TableCell align="center">Name</TableCell>
               <TableCell align="center">Size</TableCell>
               <TableCell align="center">Progress</TableCell>
-              <TableCell align="center">Peers</TableCell>
-              <TableCell align="center">Speed</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>{torrents}</TableBody>
         </Table>
+        {/* <ContextMenu
+          open={contextAnchor.anchorEl !== null}
+          closeMe={() => this.viewStore.removeContextAnchor()}
+          torrent={contextAnchor.torrent}
+          posX={contextAnchor.posX}
+          posY={contextAnchor.posY}
+          anchorEl={contextAnchor.anchorEl}
+        /> */}
       </TableContainer>
     );
   }
 }
 
-export default observer(TorrentTable);
+export default withStyles(styles, { withTheme: true })(observer(TorrentTable));

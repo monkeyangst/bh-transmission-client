@@ -1,7 +1,8 @@
 import React, { useContext } from 'react';
 import { StoreContext } from '../../stores';
 import { observer } from 'mobx-react';
-
+import WithAside from '../WithAside';
+import TorrentStats from '../TorrentStats';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 import {
   Container,
@@ -89,37 +90,11 @@ const Torrents = (props) => {
   };
 
   return (
-    <div className={classes.root}>
-      <main
-        className={clsx(classes.content, {
-          [classes.contentShift]: open,
-        })}
-      >
-        <button onClick={handleDrawerToggle}>Click Me</button>
-
+    <WithAside aside={<TorrentStats />} showAside={open}>
+      <main>
         <TorrentTable />
       </main>
-      <Drawer
-        className={classes.drawer}
-        variant="persistent"
-        anchor="right"
-        open={open}
-        classes={{
-          paper: classes.drawerPaper,
-        }}
-      >
-        <div className={classes.drawerHeader}>
-          <IconButton onClick={handleDrawerToggle}>
-            {theme.direction === 'rtl' ? (
-              <ChevronLeftIcon />
-            ) : (
-              <ChevronRightIcon />
-            )}
-          </IconButton>
-        </div>
-        <Divider />
-      </Drawer>
-    </div>
+    </WithAside>
   );
 };
 export default observer(Torrents);

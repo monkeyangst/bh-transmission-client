@@ -55,6 +55,7 @@ class RPC {
           'isPrivate',
           'pieceCount',
           'pieceSize',
+          'labels',
         ],
       },
       method: method ? method : 'torrent-get',
