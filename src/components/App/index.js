@@ -5,15 +5,17 @@ import Header from '../Header';
 import { ThemeProvider } from '@material-ui/core/styles';
 import theme from '../../theme';
 
-function App() {
-  return (
-    <ThemeProvider theme={theme}>
-      <div className="App">
-        <Header />
-        <Torrents />
-      </div>
-    </ThemeProvider>
-  );
+class App extends React.Component {
+  render() {
+    return (
+      <ThemeProvider theme={theme}>
+        <div className="App">
+          <Header />
+          <Torrents />
+        </div>
+      </ThemeProvider>
+    );
+  }
 }
 
 export default App;

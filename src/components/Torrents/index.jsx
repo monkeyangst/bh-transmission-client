@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import { observer } from 'mobx-react';
 import clsx from 'clsx';
-import { makeStyles, useTheme } from '@material-ui/core/styles';
+import { makeStyles, useTheme, withStyles } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import TorrentTable from '../TorrentTable';
 import TorrentDrawer from '../TorrentDrawer';
@@ -9,7 +9,7 @@ import { StoreContext } from '../../stores';
 
 const drawerWidth = 300;
 
-const useStyles = makeStyles((theme) => ({
+const styles = (theme) => ({
   root: {
     display: 'flex',
   },
@@ -32,29 +32,43 @@ const useStyles = makeStyles((theme) => ({
     }),
     marginRight: 0,
   },
-}));
+});
 
-function PersistentDrawerRight() {
-  const theme = useTheme();
-  const classes = useStyles(theme);
+class Torrents extends React.Component {
+  static contextType = StoreContext;
+  viewStore = this.context.viewStore;
+  torrentStore = this.context.torrentStore;
 
-  const { viewStore } = useContext(StoreContext);
-  const open = viewStore.drawerOpen;
+  componentDidMount() {
+    this.torrentStore.fetchTorrents();
+    setInterval(() => {
+      this.torrentStore.fetchTorrents();
+    }, 5000);
+  }
 
-  return (
-    <div className={classes.root}>
-      <CssBaseline />
+  render() {
+    const { classes } = this.props;
 
-      <main
-        className={clsx(classes.content, {
-          [classes.contentShift]: open,
-        })}
-      >
-        <TorrentTable />
-      </main>
-      <TorrentDrawer />
-    </div>
-  );
+    const { viewStore, torrentStore } = this.context;
+    let torrents = [];
+    if (torrentStore.populated) torrents = torrentStore.torrents;
+    const open = viewStore.drawerOpen;
+
+    return (
+      <div className={classes.root}>
+        <CssBaseline />
+
+        <main
+          className={clsx(classes.content, {
+            [classes.contentShift]: open,
+          })}
+        >
+          <TorrentTable torrents={torrents} />
+        </main>
+        <TorrentDrawer />
+      </div>
+    );
+  }
 }
 
-export default observer(PersistentDrawerRight);
+export default withStyles(styles, { withTheme: true })(observer(Torrents));

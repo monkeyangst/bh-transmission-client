@@ -5,7 +5,7 @@ class ViewStore {
   selectedTorrents = [];
   contextAnchor = null;
   sortBy = 'Queue Order';
-  filterBy = 'All';
+  filterBy = '-1';
 
   constructor() {
     makeObservable(this, {

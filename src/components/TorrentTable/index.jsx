@@ -21,6 +21,9 @@ const styles = (theme) => ({
 
 class TorrentTable extends React.Component {
   static contextType = StoreContext;
+  torrentStore = this.context.torrentStore;
+  viewStore = this.context.viewStore;
+
   state = {
     loading: true,
     // contextAnchor: {
@@ -30,13 +33,6 @@ class TorrentTable extends React.Component {
     //   posY
     // }
   };
-
-  componentDidMount() {
-    this.torrentStore.fetchTorrents();
-    setInterval(() => {
-      this.torrentStore.fetchTorrents();
-    }, 5000);
-  }
 
   startStopClicked(e, id, status) {
     if (status === 0) {
@@ -56,25 +52,20 @@ class TorrentTable extends React.Component {
 
   render() {
     // console.log(this.props);
-    this.torrentStore = this.context.torrentStore;
-    this.viewStore = this.context.viewStore;
-    let torrents = [];
-    if (this.torrentStore.populated) {
-      torrents = this.torrentStore.torrents.map((torrent) => {
-        const selected = this.isSelected(torrent.id);
-        return (
-          <TorrentRow
-            key={torrent.id}
-            torrent={torrent}
-            clicked={(e) => this.viewStore.toggleSelected(torrent.id)}
-            pauseButton={(e) =>
-              this.startStopClicked(e, torrent.id, torrent.status)
-            }
-            isSelected={selected}
-          />
-        );
-      });
-    }
+    let torrents = this.props.torrents.map((torrent) => {
+      const selected = this.isSelected(torrent.id);
+      return (
+        <TorrentRow
+          key={torrent.id}
+          torrent={torrent}
+          clicked={(e) => this.viewStore.toggleSelected(torrent.id)}
+          pauseButton={(e) =>
+            this.startStopClicked(e, torrent.id, torrent.status)
+          }
+          isSelected={selected}
+        />
+      );
+    });
 
     var contextAnchor = this.viewStore.contextAnchor;
     if (contextAnchor === null)

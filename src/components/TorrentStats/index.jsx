@@ -7,6 +7,7 @@ import {
   CardContent,
   Typography,
   Table,
+  TableBody,
   TableRow,
   TableCell,
 } from '@material-ui/core';
@@ -60,18 +61,20 @@ const TorrentStats = (props) => {
         {torrent.name}
       </Typography>
       <Table className={classes.table}>
-        <TableRow>
-          <TableCell>Have:</TableCell>
-          <TableCell>
-            <Typography variant="body2">
-              {formatBytes(torrent.haveValid)} ({torrent.percentDone * 100}%)`
-            </Typography>
-          </TableCell>
-        </TableRow>
-        <TableRow>
-          <TableCell>Availability:</TableCell>
-          <TableCell>{torrent.percentDone}</TableCell>
-        </TableRow>
+        <TableBody>
+          <TableRow>
+            <TableCell>Have:</TableCell>
+            <TableCell>
+              <Typography variant="body2">
+                {formatBytes(torrent.haveValid)} ({torrent.percentDone * 100}%)`
+              </Typography>
+            </TableCell>
+          </TableRow>
+          <TableRow>
+            <TableCell>Availability:</TableCell>
+            <TableCell>{torrent.percentDone}</TableCell>
+          </TableRow>
+        </TableBody>
       </Table>
     </div>
   );
