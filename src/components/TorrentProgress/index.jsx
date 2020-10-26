@@ -14,6 +14,9 @@ const useStyles = makeStyles((theme) => ({
   root: {
     // backgroundColor: 'Red',
   },
+  paused: {
+    color: theme.palette.error.main,
+  },
   error: {
     color: theme.palette.error.main,
   },
@@ -36,7 +39,7 @@ const useStyles = makeStyles((theme) => ({
 
 const getProgressStyle = (torrent, theme) => {
   let progressFg = theme.palette.primary.dark;
-  let progressBg = theme.palette.primary.light;
+  let progressBg = '#cccccc';
 
   switch (torrent.status) {
     case 7:
@@ -47,12 +50,13 @@ const getProgressStyle = (torrent, theme) => {
     case 5:
       progressFg = theme.palette.success.dark;
       progressBg = theme.palette.success.light;
+
       break;
     case 4:
     case 3:
     default:
       progressFg = theme.palette.info.dark;
-      progressBg = theme.palette.info.light;
+      progressBg = '#cccccc';
 
       break;
     case 2:
@@ -84,6 +88,26 @@ const getProgressStyle = (torrent, theme) => {
 
 const TorrentStats = (props) => {
   let { torrent, classes, done } = props;
+
+  const speeds = torrent.isStopped ? (
+    <span className={classes.paused}> Paused </span>
+  ) : (
+    <>
+      {' '}
+      <Grid item>
+        <ArrowDownward className={classes.arrow} />
+      </Grid>
+      <Grid item>
+        <div>{formatBytes(torrent.rateDownload)}/s</div>
+      </Grid>
+      <Grid item>
+        <ArrowUpward className={classes.arrow} />
+      </Grid>
+      <Grid item>
+        <div>{formatBytes(torrent.rateUpload)}/s</div>
+      </Grid>
+    </>
+  );
   return (
     <Grid container className={classes.stats} justify="space-evenly">
       <Grid item md={2}>
@@ -93,18 +117,7 @@ const TorrentStats = (props) => {
         </div>
       </Grid>
       <Grid item container md={8} className={classes.speeds}>
-        <Grid item>
-          <ArrowDownward className={classes.arrow} />
-        </Grid>
-        <Grid item>
-          <div>{formatBytes(torrent.rateDownload)}/s</div>
-        </Grid>
-        <Grid item>
-          <ArrowUpward className={classes.arrow} />
-        </Grid>
-        <Grid item>
-          <div>{formatBytes(torrent.rateUpload)}/s</div>
-        </Grid>
+        {speeds}
       </Grid>
       <Grid item md={2}>
         <div>{`${Math.round(done)}%`}</div>

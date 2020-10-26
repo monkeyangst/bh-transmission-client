@@ -2,13 +2,20 @@ import React, { useContext } from 'react';
 import { StoreContext } from '../../stores';
 import { observer } from 'mobx-react';
 import { useTheme, makeStyles } from '@material-ui/core/styles';
-import Drawer from '@material-ui/core/Drawer';
-import Container from '@material-ui/core/Container';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import Typography from '@material-ui/core/Typography';
-import List from '@material-ui/core/List';
-import Divider from '@material-ui/core/Divider';
-import IconButton from '@material-ui/core/IconButton';
+import {
+  Drawer,
+  Container,
+  CssBaseline,
+  Typography,
+  Divider,
+  IconButton,
+  FormControl,
+  Select,
+  FormHelperText,
+  MenuItem,
+  InputLabel,
+  Grid,
+} from '@material-ui/core/';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import ListItem from '@material-ui/core/ListItem';
@@ -16,6 +23,11 @@ import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import InboxIcon from '@material-ui/icons/MoveToInbox';
 import MailIcon from '@material-ui/icons/Mail';
+import { formatBytes } from '../../util/calc';
+import TorrentStats from '../TorrentStats';
+import SortMenu from '../SortMenu/';
+import FilterMenu from '../FilterMenu';
+
 const drawerWidth = 300;
 
 const useStyles = makeStyles((theme) => ({
@@ -40,6 +52,19 @@ const useStyles = makeStyles((theme) => ({
     ...theme.mixins.toolbar,
     justifyContent: 'flex-start',
   },
+  drawerContent: {
+    margin: theme.spacing(3),
+  },
+  formControl: {
+    margin: theme.spacing(1),
+    minWidth: 120,
+  },
+  selectEmpty: {
+    marginTop: theme.spacing(2),
+  },
+  selectGrid: {
+    padding: 0,
+  },
 }));
 const TorrentDrawer = (props) => {
   const theme = useTheme();
@@ -49,16 +74,15 @@ const TorrentDrawer = (props) => {
   let drawerContent = '';
 
   if (selectedTorrents.length > 1) {
-    console.log('MANY TORRENTS');
     drawerContent = <p>More than one torrent is selected</p>;
   } else if (selectedTorrents.length === 0) {
     drawerContent = <p>No torrents are selected</p>;
   } else {
     // Only one torrent is selected -- get info about that torrent
     const torrentId = selectedTorrents[0];
-    console.log(torrentId);
     const torrent = torrentStore.getTorrent(torrentId);
-    drawerContent = <Container>{torrent.name}</Container>;
+    console.log(torrent);
+    drawerContent = <TorrentStats torrent={torrent} />;
   }
 
   return (
@@ -81,7 +105,22 @@ const TorrentDrawer = (props) => {
         </IconButton>
       </div>
       <Divider />
-      {drawerContent}
+      <Container class={classes.drawerContent}>
+        <Grid
+          container
+          style={{ background: '#ccffcc' }}
+          spacing={2}
+          className={classes.selectGrid}
+        >
+          <Grid item lg={6}>
+            <SortMenu />
+          </Grid>
+          <Grid item lg={6}>
+            <FilterMenu />
+          </Grid>
+        </Grid>
+        {drawerContent}
+      </Container>
     </Drawer>
   );
 };

@@ -1,35 +1,40 @@
 import { observable, makeObservable, action } from 'mobx';
+import Torrent from './torrent';
 
-class ViewStore {
+export const FilterStates = [
+  { value: -1, label: 'All', persistKey: 'all' },
+  { value: 11, label: 'Active', persistKey: 'active' },
+  {
+    value: Torrent.STATUS_DOWNLOAD,
+    label: 'Downloading',
+    persistKey: 'downloading',
+  },
+  { value: Torrent.STATUS_SEED, label: 'Seeding', persistKey: 'seeding' },
+  { value: Torrent.STATUS_STOPPED, label: 'Paused', persistKey: 'paused' },
+  { value: 55, label: 'Finished', persistKey: 'finished' },
+  {
+    value: '/transmission/rpc',
+    label: 'RPC Endpoint',
+    persistKey: 'rpcEndpoint',
+  },
+];
+
+class PrefsStore {
   drawerOpen = false;
   selectedTorrents = [];
   contextAnchor = null;
-  sortBy = 'Queue Order';
-  filterBy = 'All';
 
   constructor() {
     makeObservable(this, {
       selectedTorrents: observable,
       drawerOpen: observable,
       contextAnchor: observable,
-      sortBy: observable,
-      filterBy: observable,
       toggleSelected: action,
       toggleDrawer: action,
       setContextAnchor: action,
       removeContextAnchor: action,
-      setSortBy: action,
-      setFilterBy: action,
     });
   }
-
-  setSortBy = (option) => {
-    this.sortBy = option;
-  };
-
-  setFilterBy = (option) => {
-    this.filterBy = option;
-  };
 
   setContextAnchor(event, torrent) {
     event.preventDefault();
@@ -72,4 +77,4 @@ class ViewStore {
   }
 }
 
-export default new ViewStore();
+export default new PrefsStore();

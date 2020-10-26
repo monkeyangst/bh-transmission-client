@@ -1,5 +1,6 @@
 import React, { useContext } from 'react';
 import { AppBar, Toolbar, IconButton, Typography } from '@material-ui/core';
+import SpeedSwitch from '../SpeedSwitch';
 import { Menu as MenuIcon, InfoOutlined } from '@material-ui/icons';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 import { StoreContext } from '../../stores';
@@ -12,6 +13,9 @@ const useStyles = makeStyles((theme) => ({
     flexGrow: 1,
   },
   title: {
+    flexGrow: 1,
+  },
+  switch: {
     flexGrow: 1,
   },
   appBar: {
@@ -54,9 +58,10 @@ const Header = (props) => {
         <Typography variant="h6" className={classes.title}>
           Brad's Transmision Client
         </Typography>
-        <Typography>
+        <SpeedSwitch className={classes.switch} />
+        {/* <Typography>
           There are {viewStore.selectedTorrents.length} torrents selected.
-        </Typography>
+        </Typography> */}
         <IconButton
           edge="end"
           color="inherit"
@@ -64,7 +69,7 @@ const Header = (props) => {
           onClick={(e) => viewStore.toggleDrawer()}
           className={clsx(viewStore.drawerOpen && classes.hide)}
         >
-          <MenuIcon />
+          <InfoOutlined />
         </IconButton>
       </Toolbar>
     </AppBar>

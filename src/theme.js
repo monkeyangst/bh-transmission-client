@@ -1,10 +1,6 @@
 import { createMuiTheme } from '@material-ui/core/styles';
 const theme = createMuiTheme({
   spacing: 8,
-  root: {
-    margin: 20,
-    backgroundColor: '#e0e0e0',
-  },
   palette: {
     // primary: {
     //   light: '#9a67ea',

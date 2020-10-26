@@ -1,5 +1,6 @@
 import { runInAction, observable, makeObservable, action } from 'mobx';
 import RPC from '../util/rpc';
+import Torrent from './torrent';
 
 const rpc = new RPC();
 
@@ -7,6 +8,17 @@ class TorrentStore {
   torrents = [];
   selectedTorrents = [];
   populated = false;
+
+  criteriaList = {
+    queue_order: 'Queue Order',
+    activity: 'Activity',
+    age: 'Age',
+    name: 'Name',
+    percent_completed: 'Progress',
+    ratio: 'Ratio',
+    size: 'Size',
+    state: 'State',
+  };
 
   constructor() {
     makeObservable(this, {
@@ -17,19 +29,74 @@ class TorrentStore {
   }
 
   fetchTorrents() {
+    const args = {
+      fields: [
+        'id',
+        'addedDate',
+        'name',
+        'totalSize',
+        'error',
+        'errorString',
+        'eta',
+        'isFinished',
+        'isStalled',
+        'leftUntilDone',
+        'metadataPercentComplete',
+        'peersConnected',
+        'peersGettingFromUs',
+        'peersSendingToUs',
+        'percentDone',
+        'queuePosition',
+        'rateDownload',
+        'rateUpload',
+        'recheckProgress',
+        'seedRatioMode',
+        'seedRatioLimit',
+        'sizeWhenDone',
+        'status',
+        'trackers',
+        'downloadDir',
+        'uploadedEver',
+        'uploadRatio',
+        'webseedsSendingToUs',
+
+        'activityDate',
+        'corruptEver',
+        'desiredAvailable',
+        'downloadedEver',
+        'fileStats',
+        'haveUnchecked',
+        'haveValid',
+        'peers',
+        'startDate',
+        'trackerStats',
+        'comment',
+        'creator',
+        'dateCreated',
+        'files',
+        'hashString',
+        'isPrivate',
+        'pieceCount',
+        'pieceSize',
+        'labels',
+      ],
+    };
+
     this.loading = true;
     // console.log('Fetching torrents...');
     rpc
-      .sendRequest('torrent-get')
+      .sendRequest('torrent-get', args)
       .then((response) => response.json())
       .then((data) => {
         runInAction(() => {
           // console.log(data.arguments);
-          this.torrents = data.arguments.torrents;
-          if (this.torrents.length > 0) {
+          const newTorrents = data.arguments.torrents;
+          if (newTorrents.length > 0) {
             this.populated = true;
-            // console.log('I found some torrents');
-            // console.log(this.populated);
+            // right now we don't pass IDs to this method, so we just replace everything
+            this.torrents.replace(
+              newTorrents.map((torrent) => new Torrent(torrent))
+            );
           }
         });
       });
@@ -83,6 +150,7 @@ class TorrentStore {
   getTorrent = (id) =>
     this.torrents.find((torrent, index) => {
       if (torrent.id === id) return true;
+      else return false;
     });
 }
 
