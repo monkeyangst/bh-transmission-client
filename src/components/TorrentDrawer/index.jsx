@@ -106,12 +106,7 @@ const TorrentDrawer = (props) => {
       </div>
       <Divider />
       <Container class={classes.drawerContent}>
-        <Grid
-          container
-          style={{ background: '#ccffcc' }}
-          spacing={2}
-          className={classes.selectGrid}
-        >
+        <Grid container spacing={0} className={classes.selectGrid}>
           <Grid item lg={6}>
             <SortMenu />
           </Grid>
